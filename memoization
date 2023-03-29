@@ -1,0 +1,29 @@
+class Solution:
+    def mincostTickets(self, days: List[int], costs: List[int]) -> int:
+        def solve(days,costs,n,i,dp):
+            if i>n-1:
+                dp[i]=0
+                return dp[i]
+            if dp[i]!=-1:
+                return dp[i]
+            one,two,three=10**20,10**20,10**20
+            day=days[i]
+            one=costs[0]+solve(days,costs,n,i+1,dp)
+            idx1,idx2=i,i
+            for din in range(day,day+7):
+                if idx1>n-1:
+                    break
+                if days[idx1]==din:
+                    idx1+=1
+            two=costs[1]+solve(days,costs,n,idx1,dp)
+            for din in range(day,day+30):
+                if idx2>n-1:
+                    break
+                if days[idx2]==din:
+                    idx2+=1
+            three=costs[2]+solve(days,costs,n,idx2,dp)
+            dp[i]=min(one,min(two,three))
+            return dp[i]
+        n=len(days)
+        dp=[-1]*(n+1)
+        return solve(days,costs,n,0,dp)
